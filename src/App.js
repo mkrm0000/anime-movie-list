@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 function App() {
   const [characterName, setCharacterName] = useState('');
-  const [characters, setCharacters] = useState({});
+  const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -10,7 +10,7 @@ function App() {
     if (!characterName) return;
 
     setLoading(true);
-    setCharacters({});
+    setCharacters([]);
     setError('');
 
     try {
@@ -18,16 +18,19 @@ function App() {
       const data = await response.json();
 
       if (data.data && data.data.length > 0) {
-        const characterData = {};
+        // Normalize character names for case-insensitive comparison
+        const normalizedCharacterName = characterName.toLowerCase();
 
-        data.data.forEach(character => {
-          characterData[character.name] = {
-            films: character.films,
-            imageUrl: character.imageUrl,  // Store image URL with the character data
-          };
-        });
+        // Find all characters that match the input name case-insensitively
+        const matchingCharacters = data.data.filter((character) =>
+          character.name.toLowerCase() === normalizedCharacterName
+        );
 
-        setCharacters(characterData);
+        if (matchingCharacters.length > 0) {
+          setCharacters(matchingCharacters);
+        } else {
+          setError('No exact match found for this character.');
+        }
       } else {
         setError('No data found for this character.');
       }
@@ -53,21 +56,22 @@ function App() {
 
       {error && <p>{error}</p>}
 
-      <div>
-        {Object.keys(characters).length > 0 ? (
-          Object.entries(characters).map(([character, data], index) => (
-            <div key={index}>
-              <h3>{character}</h3>
-              <img src={data.imageUrl} alt={character} width="150" />
-              {data.films.map((movie, movieIndex) => (
+      {characters.length > 0 ? (
+        characters.map((character, index) => (
+          <div key={index}>
+            <h3>{character.name}</h3>
+            <img src={character.imageUrl} alt={character.name} width="150" />
+            <div>
+              <h4>Movies:</h4>
+              {character.films.map((movie, movieIndex) => (
                 <p key={movieIndex}>{movie}</p>
               ))}
             </div>
-          ))
-        ) : (
-          <p>No movies to display.</p>
-        )}
-      </div>
+          </div>
+        ))
+      ) : (
+        <p>No exact matches to display.</p>
+      )}
     </div>
   );
 }
