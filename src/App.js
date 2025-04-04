@@ -20,14 +20,21 @@ function App() {
       if (data.data && data.data.length > 0) {
         const characterData = {};
 
+        // Case insensitive filter
         data.data.forEach(character => {
-          characterData[character.name] = {
-            films: character.films,
-            imageUrl: character.imageUrl,  // Store image URL with the character data
-          };
+          if (character.name.toLowerCase() === characterName.toLowerCase()) {
+            characterData[character.name] = {
+              films: character.films,
+              imageUrl: character.imageUrl,  // Store image URL with the character data
+            };
+          }
         });
 
-        setCharacters(characterData);
+        if (Object.keys(characterData).length > 0) {
+          setCharacters(characterData);
+        } else {
+          setError('No exact matches found for this character.');
+        }
       } else {
         setError('No data found for this character.');
       }
