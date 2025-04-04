@@ -20,21 +20,14 @@ function App() {
       if (data.data && data.data.length > 0) {
         const characterData = {};
 
-        // Case insensitive filter
         data.data.forEach(character => {
-          if (character.name.toLowerCase() === characterName.toLowerCase()) {
-            characterData[character.name] = {
-              films: character.films,
-              imageUrl: character.imageUrl,  // Store image URL with the character data
-            };
-          }
+          characterData[character.name] = {
+            films: character.films,
+            imageUrl: character.imageUrl,  // Store image URL with the character data
+          };
         });
 
-        if (Object.keys(characterData).length > 0) {
-          setCharacters(characterData);
-        } else {
-          setError('No exact matches found for this character.');
-        }
+        setCharacters(characterData);
       } else {
         setError('No data found for this character.');
       }
