@@ -42,4 +42,8 @@ Open your browser and go to `http://localhost:3000`.
 
 ## ⚙️ API Used
 
-Data fetched from: [https://disneyapi.dev](https://disneyapi.dev)s
+Data fetched from: [https://disneyapi.dev](https://disneyapi.dev)
+
+## 🌐 Live Demo
+Check out the live version here:
+🔗 [https://anime-movie-list.vercel.app](https://anime-movie-list.vercel.app)
